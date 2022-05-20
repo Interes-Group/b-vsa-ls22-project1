@@ -132,34 +132,4 @@ class CarTypeTest {
             throw new RuntimeException("Could not test car type on car entity!");
         }
     }
-
-    @Test
-    void TYPE07_createAndGetParkingSpotWithCarType() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Object type = carParkService.createCarType(CAR_TYPE_NAME);
-        assertNotNull(type);
-        testShouldHaveId(type);
-        Long typeId = getFieldValue(type, "id", Long.class);
-        Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
-        assertNotNull(carPark);
-        testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
-        Object carParkFloor = carParkService.createCarParkFloor(carParkId, CarPark.floor);
-        assertNotNull(carParkFloor);
-        Object spot = carParkService.createParkingSpot(carParkId, CarPark.floor, CarPark.spot, typeId);
-        assertNotNull(spot);
-        testShouldHaveId(spot);
-        Object carType = null;
-        if (hasField(spot, "type")) {
-            carType = getFieldValue(spot, "type");
-        } else if (hasField(spot, "carType")) {
-            carType = getFieldValue(spot, "carType");
-        }
-        if (carType != null) {
-            Object found = carParkService.getCarType(getFieldValue(carType, "id", Long.class));
-            assertNotNull(found);
-            assertEquals(typeId, getFieldValue(found, "id"));
-        } else {
-            throw new RuntimeException("Could not test car type on parking spot entity!");
-        }
-    }
 }
