@@ -16,7 +16,7 @@
         <class>sk.stuba.fei.uim.vsa.pr1.domain.UserCoupon</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/VSA_PR1"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/VSA_PR1?useSSL=false&amp;serverTimezone=UTC"/>
             <property name="javax.persistence.jdbc.user" value="vsa"/>
             <property name="javax.persistence.jdbc.password" value="vsa"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

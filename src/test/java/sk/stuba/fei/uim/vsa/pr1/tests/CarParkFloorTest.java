@@ -92,7 +92,7 @@ class CarParkFloorTest {
 
 
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -197,7 +197,7 @@ class CarParkFloorTest {
             assertEquals(cF2, f2);*/
 
             List<Object> floors = carParkService.getCarParkFloors(id);
-            assertEquals(floors.size(), 2);
+            assertEquals(2, floors.size());
             Object fl = floors.get(0);
             // gotta find which one it is, floor1 or floor2
             Object embFl = getEmbeddedKeyMethod.invoke(fl);
@@ -213,22 +213,14 @@ class CarParkFloorTest {
             assertNotNull(emfFlId2);
 
             if (emfFlId.equals(cF1)) {
-                if (emfFlId2.equals(cF2)) {
-                    assertTrue(true);
-                } else {
-                    assertTrue(false);
-                }
+                assertEquals(emfFlId2, cF2);
             } else if (emfFlId.equals(cF2)) {
-                if (emfFlId2.equals(cF1)) {
-                    assertTrue(true);
-                } else {
-                    assertTrue(false);
-                }
+                assertEquals(emfFlId2, cF1);
             } else {
-                assertTrue(false);
+                fail();
             }
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
         /*List<Object> floors = carParkService.getCarParkFloors(carParkId);
             assertEquals(floors.size(), 2);
@@ -308,7 +300,7 @@ class CarParkFloorTest {
             assertEquals(carParkFloor2Identifier, floor2Identifier);
 
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -317,16 +309,16 @@ class CarParkFloorTest {
 
         Object carPark = carParkService.createCarPark("test6", "testtest", 12);
         assertNotNull(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         assertNotNull(carParkId);
         Object carParkFloor = carParkService.createCarParkFloor(carParkId, "Floor1");
         testShouldHaveId(carParkFloor);
 
-        Long carParkFloorId = getFieldValue(carParkFloor, "id", Long.class);
+        Long carParkFloorId = getEntityId(carParkFloor);
         assertNotNull(carParkFloorId);
 
         Object floor = carParkService.getCarParkFloor(carParkFloorId);
-        Long floorId = getFieldValue(floor, "id", Long.class);
+        Long floorId = getEntityId(floor);
         assertEquals(carParkFloorId, floorId);
 
         String[] fields = findFieldByType(carParkFloor, String.class);
@@ -341,12 +333,12 @@ class CarParkFloorTest {
 
         Object modifiedFloor = carParkService.updateCarParkFloor(carParkFloor);
         assertNotNull(modifiedFloor);
-        Long modifiedFloorId = getFieldValue(modifiedFloor, "id", Long.class);
+        Long modifiedFloorId = getEntityId(modifiedFloor);
 
         assertEquals(carParkFloorId, modifiedFloorId);
 
         floor = carParkService.getCarParkFloor(carParkFloorId);
-        floorId = getFieldValue(floor, "id", Long.class);
+        floorId = getEntityId(floor);
         assertEquals(floorId, carParkFloorId);
 
         for (String f : fields) {
@@ -362,7 +354,7 @@ class CarParkFloorTest {
     public void getAllCarParkFloorsId() {
         try {
             Object carPark = carParkService.createCarPark("test7", "testtest", 12);
-            Long carParkId = getFieldValue(carPark, "id", Long.class);
+            Long carParkId = getEntityId(carPark);
             assertNotNull(carParkId);
             Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor1");
             Object floor2 = carParkService.createCarParkFloor(carParkId, "Floor2");
@@ -378,16 +370,16 @@ class CarParkFloorTest {
             assertNotNull(carParkFloorGetIdentifier);
 
             List<Object> floors = carParkService.getCarParkFloors(carParkId);
-            assertEquals(floors.size(), 2);
+            assertEquals(2, floors.size());
             Object fl1 = floors.get(0);
             Object fl2 = floors.get(1);
             assertNotNull(fl1);
             assertNotNull(fl2);
 
-            Long floor1Id = getFieldValue(floor1, "id", Long.class);
-            Long floor2Id = getFieldValue(floor2, "id", Long.class);
-            Long fl1Id = getFieldValue(fl1, "id", Long.class);
-            Long fl2Id = getFieldValue(fl2, "id", Long.class);
+            Long floor1Id = getEntityId(floor1);
+            Long floor2Id = getEntityId(floor2);
+            Long fl1Id = getEntityId(fl1);
+            Long fl2Id = getEntityId(fl2);
             assertNotNull(floor1Id);
             assertNotNull(floor2Id);
             assertNotNull(fl1Id);
@@ -398,44 +390,41 @@ class CarParkFloorTest {
                     assertEquals(carParkFloorGetIdentifier.invoke(floor1), carParkFloorGetIdentifier.invoke(fl1));
                     assertEquals(carParkFloorGetIdentifier.invoke(floor2), carParkFloorGetIdentifier.invoke(fl2));
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             } else if (floor2Id.equals(fl1)) {
                 if (floor1Id.equals(fl1)) {
                     assertEquals(carParkFloorGetIdentifier.invoke(floor2), carParkFloorGetIdentifier.invoke(fl1));
                     assertEquals(carParkFloorGetIdentifier.invoke(floor1), carParkFloorGetIdentifier.invoke(fl2));
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
-
-
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
-
     }
 
     public void deleteCarParkFloorIdTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object carPark = carParkService.createCarPark("FLOOR-DELETE", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
 
         assertNotNull(carParkId);
 
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor1");
         assertNotNull(floor1);
         testShouldHaveId(floor1);
-        Long floorId = getFieldValue(floor1, "id", Long.class);
+        Long floorId = getEntityId(floor1);
 
         Object fl1 = carParkService.getCarParkFloor(floorId);
 
         assertNotNull(fl1);
 
-        Long fl1Id = getFieldValue(fl1, "id", Long.class);
+        Long fl1Id = getEntityId(fl1);
         assertEquals(fl1Id, floorId);
 
         String[] fields = findFieldByType(fl1, String.class);

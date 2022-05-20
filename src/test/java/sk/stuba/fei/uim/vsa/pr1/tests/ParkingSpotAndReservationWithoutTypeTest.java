@@ -45,7 +45,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         assertNotNull(carParkId);
 
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor1");
@@ -66,9 +66,9 @@ class ParkingSpotAndReservationWithoutTypeTest {
 
         Map<String, List<Object>> map = carParkService.getAvailableParkingSpots("test7");
         assertNotNull(map);
-        assertEquals(map.keySet().size(), 2);
-        assertTrue(map.keySet().contains("Floor1"));
-        assertTrue(map.keySet().contains("Floor2"));
+        assertEquals(2, map.keySet().size());
+        assertTrue(map.containsKey("Floor1"));
+        assertTrue(map.containsKey("Floor2"));
 
         List<Object> floor1Slots = map.get("Floor1");
         List<Object> floor2Slots = map.get("Floor2");
@@ -78,10 +78,10 @@ class ParkingSpotAndReservationWithoutTypeTest {
         assertEquals(floor1Slots.size(), 2);
         assertEquals(floor2Slots.size(), 2);
 
-        Long floor1Spot1Id = getFieldValue(floor1Spot1, "id", Long.class);
-        Long floor1Spot2Id = getFieldValue(floor1Spot2, "id", Long.class);
-        Long floor2Spot1Id = getFieldValue(floor2Spot1, "id", Long.class);
-        Long floor2Spot2Id = getFieldValue(floor2Spot2, "id", Long.class);
+        Long floor1Spot1Id = getEntityId(floor1Spot1);
+        Long floor1Spot2Id = getEntityId(floor1Spot2);
+        Long floor2Spot1Id = getEntityId(floor2Spot1);
+        Long floor2Spot2Id = getEntityId(floor2Spot2);
 
         assertNotNull(floor1Spot1Id);
         assertNotNull(floor1Spot2Id);
@@ -102,10 +102,10 @@ class ParkingSpotAndReservationWithoutTypeTest {
         String[] spotFields = findFieldByType(floor1Spot1, String.class);
         assertNotNull(spotFields);
 
-        Long fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
-        Long fl1Spot2Id = getFieldValue(fl1Spot2, "id", Long.class);
-        Long flr2Spot1Id = getFieldValue(fl2Spot1, "id", Long.class);
-        Long flr2Spot2Id = getFieldValue(fl2Spot2, "id", Long.class);
+        Long fl1Spot1Id = getEntityId(fl1Spot1);
+        Long fl1Spot2Id = getEntityId(fl1Spot2);
+        Long flr2Spot1Id = getEntityId(fl2Spot1);
+        Long flr2Spot2Id = getEntityId(fl2Spot2);
 
         assertNotNull(fl1Spot1Id);
         assertNotNull(fl1Spot2Id);
@@ -120,7 +120,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
 
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
 
         } else if (floor1Spot2Id.equals(fl1Spot2Id)) {
@@ -130,7 +130,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
             }
 
         } else {
-            assertTrue(false);
+            fail();
         }
 
         if (floor2Spot1Id.equals(flr2Spot1Id)) {
@@ -140,7 +140,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
                     assertEquals(getFieldValue(floor2Spot2, f, String.class), getFieldValue(fl2Spot2, f, String.class));
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
         } else if (floor2Spot2Id.equals(flr2Spot1Id)) {
             if (floor2Spot1Id.equals(flr2Spot2Id)) {
@@ -149,30 +149,30 @@ class ParkingSpotAndReservationWithoutTypeTest {
                     assertEquals(getFieldValue(floor2Spot1, f, String.class), getFieldValue(fl2Spot2, f, String.class));
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
         } else {
-            assertTrue(false);
+            fail();
         }
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(floor1Spot1Id, carId);
         map = carParkService.getAvailableParkingSpots("test7");
         assertEquals(map.keySet().size(), 2);
-        assertTrue(map.keySet().contains("Floor1"));
-        assertTrue(map.keySet().contains("Floor2"));
+        assertTrue(map.containsKey("Floor1"));
+        assertTrue(map.containsKey("Floor2"));
 
         floor1Slots = map.get("Floor1");
         floor2Slots = map.get("Floor2");
         assertNotNull(floor1Slots);
         assertNotNull(floor2Slots);
 
-        assertEquals(floor1Slots.size(), 1);
-        assertEquals(floor2Slots.size(), 2);
+        assertEquals(1, floor1Slots.size());
+        assertEquals(2, floor2Slots.size());
 
         fl1Spot1 = floor1Slots.get(0);
 
@@ -184,9 +184,9 @@ class ParkingSpotAndReservationWithoutTypeTest {
         assertNotNull(fl2Spot1);
         assertNotNull(fl2Spot2);
 
-        fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
-        flr2Spot1Id = getFieldValue(fl2Spot1, "id", Long.class);
-        flr2Spot2Id = getFieldValue(fl2Spot2, "id", Long.class);
+        fl1Spot1Id = getEntityId(fl1Spot1);
+        flr2Spot1Id = getEntityId(fl2Spot1);
+        flr2Spot2Id = getEntityId(fl2Spot2);
 
         assertNotNull(fl1Spot1Id);
         assertNotNull(flr2Spot1Id);
@@ -199,7 +199,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
                     assertEquals(getFieldValue(floor2Spot2, f, String.class), getFieldValue(fl2Spot2, f, String.class));
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
         } else if (floor2Spot2Id.equals(flr2Spot1Id)) {
             if (floor2Spot1Id.equals(flr2Spot2Id)) {
@@ -208,10 +208,10 @@ class ParkingSpotAndReservationWithoutTypeTest {
                     assertEquals(getFieldValue(floor2Spot1, f, String.class), getFieldValue(fl2Spot2, f, String.class));
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
         } else {
-            assertTrue(false);
+            fail();
         }
 
         assertEquals(fl1Spot1Id, floor1Spot2Id);
@@ -220,24 +220,24 @@ class ParkingSpotAndReservationWithoutTypeTest {
         }
 
         Object user2 = carParkService.createUser(TestData.User2.firstName, TestData.User2.lastName, TestData.User2.email);
-        Object car2 = carParkService.createCar(getFieldValue(user2, "id", Long.class),
+        Object car2 = carParkService.createCar(getEntityId(user2),
                 TestData.Car2.brand, TestData.Car2.model, TestData.Car2.colour, TestData.Car2.ecv);
-        Long car2Id = getFieldValue(car2, "id", Long.class);
+        Long car2Id = getEntityId(car2);
 
         Object reservation2 = carParkService.createReservation(floor2Spot2Id, car2Id);
 
         map = carParkService.getAvailableParkingSpots("test7");
-        assertEquals(map.keySet().size(), 2);
-        assertTrue(map.keySet().contains("Floor1"));
-        assertTrue(map.keySet().contains("Floor2"));
+        assertEquals(2, map.keySet().size());
+        assertTrue(map.containsKey("Floor1"));
+        assertTrue(map.containsKey("Floor2"));
 
         floor1Slots = map.get("Floor1");
         floor2Slots = map.get("Floor2");
         assertNotNull(floor1Slots);
         assertNotNull(floor2Slots);
 
-        assertEquals(floor1Slots.size(), 1);
-        assertEquals(floor2Slots.size(), 1);
+        assertEquals(1, floor1Slots.size());
+        assertEquals(1, floor2Slots.size());
 
         fl1Spot1 = floor1Slots.get(0);
 
@@ -247,8 +247,8 @@ class ParkingSpotAndReservationWithoutTypeTest {
 
         assertNotNull(fl2Spot1);
 
-        fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
-        flr2Spot1Id = getFieldValue(fl2Spot1, "id", Long.class);
+        fl1Spot1Id = getEntityId(fl1Spot1);
+        flr2Spot1Id = getEntityId(fl2Spot1);
 
         assertNotNull(fl1Spot1Id);
         assertNotNull(flr2Spot1Id);
@@ -265,9 +265,9 @@ class ParkingSpotAndReservationWithoutTypeTest {
         }
 
         Object user3 = carParkService.createUser(TestData.User3.firstName, TestData.User3.lastName, TestData.User3.email);
-        Object car3 = carParkService.createCar(getFieldValue(user3, "id", Long.class),
+        Object car3 = carParkService.createCar(getEntityId(user3),
                 TestData.Car3.brand, TestData.Car3.model, TestData.Car3.colour, TestData.Car3.ecv);
-        Long car3Id = getFieldValue(car3, "id", Long.class);
+        Long car3Id = getEntityId(car3);
 
         Object reservation3 = carParkService.createReservation(floor1Spot2Id, car3Id);
 
@@ -275,15 +275,15 @@ class ParkingSpotAndReservationWithoutTypeTest {
         if (map.keySet().size() == 2) {
             List<Object> o = map.get("Floor1");
             if (o != null && !o.isEmpty()) {
-                assertTrue(false);
+                fail();
             }
         }
-        assertTrue(map.keySet().contains("Floor2"));
+        assertTrue(map.containsKey("Floor2"));
         floor2Slots = map.get("Floor2");
         assertNotNull(floor2Slots);
         assertEquals(floor2Slots.size(), 1);
         fl2Spot1 = floor2Slots.get(0);
-        flr2Spot1Id = getFieldValue(fl2Spot1, "id", Long.class);
+        flr2Spot1Id = getEntityId(fl2Spot1);
         assertEquals(floor2Spot1Id, flr2Spot1Id);
         for (String f : spotFields) {
             assertEquals(getFieldValue(floor2Spot1, f, String.class), getFieldValue(fl2Spot1, f, String.class));
@@ -296,7 +296,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         assertNotNull(carParkId);
 
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor1");
@@ -326,11 +326,11 @@ class ParkingSpotAndReservationWithoutTypeTest {
                         if (entry.getValue() == null || entry.getValue().isEmpty()) {
                             assertTrue(true);
                         } else {
-                            assertTrue(false);
+                            fail();
                         }
                     }
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             }
 
@@ -339,19 +339,16 @@ class ParkingSpotAndReservationWithoutTypeTest {
         }
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
         assertNotNull(carId);
 
 
-        Long floor1Spot1Id = getFieldValue(floor1Spot1, "id", Long.class);
-        Long floor1Spot2Id = getFieldValue(floor1Spot2, "id", Long.class);
-        ;
-        Long floor2Spot1Id = getFieldValue(floor2Spot1, "id", Long.class);
-        ;
-        Long floor2Spot2Id = getFieldValue(floor2Spot2, "id", Long.class);
-        ;
+        Long floor1Spot1Id = getEntityId(floor1Spot1);
+        Long floor1Spot2Id = getEntityId(floor1Spot2);
+        Long floor2Spot1Id = getEntityId(floor2Spot1);
+        Long floor2Spot2Id = getEntityId(floor2Spot2);
 
         assertNotNull(floor1Spot1Id);
         assertNotNull(floor1Spot2Id);
@@ -367,17 +364,17 @@ class ParkingSpotAndReservationWithoutTypeTest {
             if (map.get("Floo2") == null || map.get("Floor2").isEmpty()) {
                 assertTrue(true);
             } else {
-                assertTrue(false);
+                fail();
             }
         } else {
-            assertTrue(false);
+            fail();
         }
 
         List<Object> floor1Slots = map.get("Floor1");
         List<Object> floor2Slots = null;
         assertNotNull(floor1Slots);
 
-        assertEquals(floor1Slots.size(), 1);
+        assertEquals(1, floor1Slots.size());
 
 
         assertNotNull(floor1Spot1Id);
@@ -393,7 +390,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
         String[] spotFields = findFieldByType(floor1Spot1, String.class);
         assertNotNull(spotFields);
 
-        Long fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
+        Long fl1Spot1Id = getEntityId(fl1Spot1);
         Long fl1Spot2Id = null;
         Long flr2Spot1Id = null;
         Long flr2Spot2Id = null;
@@ -405,9 +402,9 @@ class ParkingSpotAndReservationWithoutTypeTest {
         }
 
         Object user2 = carParkService.createUser(TestData.User2.firstName, TestData.User2.lastName, TestData.User2.email);
-        Object car2 = carParkService.createCar(getFieldValue(user2, "id", Long.class),
+        Object car2 = carParkService.createCar(getEntityId(user2),
                 TestData.Car2.brand, TestData.Car2.model, TestData.Car2.colour, TestData.Car2.ecv);
-        Long car2Id = getFieldValue(car2, "id", Long.class);
+        Long car2Id = getEntityId(car2);
 
         Object reservation2 = carParkService.createReservation(floor1Spot2Id, car2Id);
 
@@ -418,18 +415,18 @@ class ParkingSpotAndReservationWithoutTypeTest {
             if (map.get("Floo2") == null || map.get("Floor2").isEmpty()) {
                 assertTrue(true);
             } else {
-                assertTrue(false);
+                fail();
             }
         } else {
-            assertTrue(false);
+            fail();
         }
-        assertTrue(map.keySet().contains("Floor1"));
+        assertTrue(map.containsKey("Floor1"));
 
         floor1Slots = map.get("Floor1");
         assertNotNull(floor1Slots);
 
 
-        assertEquals(floor1Slots.size(), 2);
+        assertEquals(2, floor1Slots.size());
 
         fl1Spot1 = floor1Slots.get(0);
         fl1Spot2 = floor1Slots.get(1);
@@ -437,8 +434,8 @@ class ParkingSpotAndReservationWithoutTypeTest {
         assertNotNull(fl1Spot1);
         assertNotNull(fl1Spot2);
 
-        fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
-        fl1Spot2Id = getFieldValue(fl1Spot2, "id", Long.class);
+        fl1Spot1Id = getEntityId(fl1Spot1);
+        fl1Spot2Id = getEntityId(fl1Spot2);
 
         assertNotNull(fl1Spot1Id);
         assertNotNull(fl1Spot2Id);
@@ -451,7 +448,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
 
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
 
         } else if (floor1Spot2Id.equals(fl1Spot2Id)) {
@@ -461,29 +458,29 @@ class ParkingSpotAndReservationWithoutTypeTest {
             }
 
         } else {
-            assertTrue(false);
+            fail();
         }
 
 
         Object user3 = carParkService.createUser(TestData.User3.firstName, TestData.User3.lastName, TestData.User3.email);
-        Object car3 = carParkService.createCar(getFieldValue(user3, "id", Long.class),
+        Object car3 = carParkService.createCar(getEntityId(user3),
                 TestData.Car3.brand, TestData.Car3.model, TestData.Car3.colour, TestData.Car3.ecv);
-        Long car3Id = getFieldValue(car3, "id", Long.class);
+        Long car3Id = getEntityId(car3);
 
         Object reservation3 = carParkService.createReservation(floor2Spot1Id, car3Id);
 
         map = carParkService.getOccupiedParkingSpots("test7");
         assertNotNull(map);
-        assertEquals(map.keySet().size(), 2);
+        assertEquals(2, map.keySet().size());
 
-        assertTrue(map.keySet().contains("Floor2"));
-        assertTrue(map.keySet().contains("Floor1"));
+        assertTrue(map.containsKey("Floor2"));
+        assertTrue(map.containsKey("Floor1"));
 
         floor1Slots = map.get("Floor1");
         assertNotNull(floor1Slots);
 
 
-        assertEquals(floor1Slots.size(), 2);
+        assertEquals(2, floor1Slots.size());
 
         fl1Spot1 = floor1Slots.get(0);
         fl1Spot2 = floor1Slots.get(1);
@@ -491,8 +488,8 @@ class ParkingSpotAndReservationWithoutTypeTest {
         assertNotNull(fl1Spot1);
         assertNotNull(fl1Spot2);
 
-        fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
-        fl1Spot2Id = getFieldValue(fl1Spot2, "id", Long.class);
+        fl1Spot1Id = getEntityId(fl1Spot1);
+        fl1Spot2Id = getEntityId(fl1Spot2);
 
         assertNotNull(fl1Spot1Id);
         assertNotNull(fl1Spot2Id);
@@ -505,7 +502,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
 
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
 
         } else if (floor1Spot2Id.equals(fl1Spot2Id)) {
@@ -515,14 +512,14 @@ class ParkingSpotAndReservationWithoutTypeTest {
             }
 
         } else {
-            assertTrue(false);
+            fail();
         }
 
         floor2Slots = map.get("Floor2");
         assertNotNull(floor2Slots);
-        assertEquals(floor2Slots.size(), 1);
+        assertEquals(1, floor2Slots.size());
         fl2Spot1 = floor2Slots.get(0);
-        flr2Spot1Id = getFieldValue(fl2Spot1, "id", Long.class);
+        flr2Spot1Id = getEntityId(fl2Spot1);
         assertEquals(floor2Spot1Id, flr2Spot1Id);
         for (String f : spotFields) {
             assertEquals(getFieldValue(floor2Spot1, f, String.class), getFieldValue(fl2Spot1, f, String.class));

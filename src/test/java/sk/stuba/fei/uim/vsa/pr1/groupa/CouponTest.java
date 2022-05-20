@@ -30,7 +30,6 @@ class CouponTest {
     @BeforeEach
     void beforeEach() {
         clearDB(mysql);
-        clearCouponDB(mysql);
     }
 
     @Test
@@ -52,8 +51,7 @@ class CouponTest {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
         testShouldHaveId(user);
-        carParkService.giveCouponToUser(getFieldValue(coupon, "id", Long.class), getFieldValue(user, "id", Long.class));
-        // TODO test this somehow
+        carParkService.giveCouponToUser(getEntityId(coupon), getEntityId(user));
     }
 
     @Test
@@ -61,9 +59,9 @@ class CouponTest {
         Object coupon = carParkService.createDiscountCoupon(Coupon.name, Coupon.discount);
         assertNotNull(coupon);
         testShouldHaveId(coupon);
-        Object found = carParkService.getCoupon(getFieldValue(coupon, "id", Long.class));
+        Object found = carParkService.getCoupon(getEntityId(coupon));
         assertNotNull(found);
-        assertEquals(getFieldValue(coupon, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(coupon), getEntityId(found));
     }
 
     @Test
@@ -74,13 +72,13 @@ class CouponTest {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
         testShouldHaveId(user);
-        carParkService.giveCouponToUser(getFieldValue(coupon, "id", Long.class), getFieldValue(user, "id", Long.class));
-        List<Object> cps = carParkService.getCoupons(getFieldValue(user, "id", Long.class));
+        carParkService.giveCouponToUser(getEntityId(coupon), getEntityId(user));
+        List<Object> cps = carParkService.getCoupons(getEntityId(user));
         assertNotNull(cps);
         assertEquals(1, cps.size());
         assertTrue(cps.stream().anyMatch(c -> {
             try {
-                return Objects.equals(getFieldValue(c, "id"), getFieldValue(coupon, "id"));
+                return Objects.equals(getEntityId(c), getEntityId(coupon));
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 return false;
@@ -93,7 +91,7 @@ class CouponTest {
         Object coupon = carParkService.createDiscountCoupon(Coupon.name, Coupon.discount);
         assertNotNull(coupon);
         testShouldHaveId(coupon);
-        Long id = getFieldValue(coupon, "id", Long.class);
+        Long id = getEntityId(coupon);
         Object deleted = carParkService.deleteCoupon(id);
         assertNotNull(deleted);
         Object notFound = carParkService.getCoupon(id);
@@ -108,30 +106,30 @@ class CouponTest {
         Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor = carParkService.createCarParkFloor(carParkId, CarPark.floor);
         assertNotNull(floor);
         Object spot = carParkService.createParkingSpot(carParkId, CarPark.floor, CarPark.spot);
         assertNotNull(spot);
         testShouldHaveId(spot);
-        Long spotId = getFieldValue(spot, "id", Long.class);
+        Long spotId = getEntityId(spot);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spotId, carId);
         assertNotNull(reservation);
         testShouldHaveId(reservation);
-        Long reservationId = getFieldValue(reservation, "id", Long.class);
+        Long reservationId = getEntityId(reservation);
 
         log("Waiting for simulating parking clock");
         Thread.sleep(3000);
 
-        Object ended = carParkService.endReservation(reservationId, getFieldValue(coupon, "id", Long.class));
+        Object ended = carParkService.endReservation(reservationId, getEntityId(coupon));
         assertNotNull(ended);
-        assertEquals(reservationId, getFieldValue(ended, "id", Long.class));
+        assertEquals(reservationId, getEntityId(ended));
 
         String[] localDateFields = findFieldByType(ended, LocalDateTime.class);
         if (localDateFields.length > 0) {

@@ -34,7 +34,7 @@ import static sk.stuba.fei.uim.vsa.pr1.TestUtils.*;
  *
  * @author sheax
  */
-public class HolidayTest {
+class HolidayTest {
     
     private static AbstractCarParkService carParkService;
     private static Connection mysql;
@@ -48,11 +48,10 @@ public class HolidayTest {
     @BeforeEach
     void beforeEach() {
         clearDB(mysql);
-        clearHolidayDB(mysql);
     }
     
     @Test
-    public void HOL_01_createAndGetHoliday() throws ParseException, InvocationTargetException, NoSuchMethodException, IllegalAccessException
+    void HOL_01_createAndGetHoliday() throws ParseException, InvocationTargetException, NoSuchMethodException, IllegalAccessException
     {
         String dateString = "2022-01-01";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,7 +84,7 @@ public class HolidayTest {
     }
     
     @Test
-    public void HOL_02_getAllHolidaysTest()  throws ParseException, InvocationTargetException, NoSuchMethodException, IllegalAccessException
+    void HOL_02_getAllHolidaysTest()  throws ParseException, InvocationTargetException, NoSuchMethodException, IllegalAccessException
     {
         String dateString = "2022-01-01";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

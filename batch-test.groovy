@@ -257,9 +257,9 @@ def editPom = { File project ->
     if (pom.developers.developer.size() > 0) {
         Node dev = pom.developers.developer[0]
         return new Student(
-                'aisId': dev.id?.text(),
-                'name': dev.name?.text(),
-                'email': dev.email?.text()
+                'aisId': dev.id?.text()?.trim()?.replace('\n', '')?.replace('\t', ''),
+                'name': dev.name?.text()?.trim()?.replace('\n', '')?.replace('\t', ''),
+                'email': dev.email?.text()?.trim()?.replace('\n', '')?.replace('\t', '')
         )
     }
     return null
@@ -278,14 +278,22 @@ def editPersistence = { File project ->
     def persistFile = new File(project.absolutePath + File.separator + String.join(File.separator, ['src', 'main', 'resources', 'META-INF', 'persistence.xml']))
     if (!persistFile.exists()) throw new RuntimeException("Cannot find persistence.xml file")
     def persist = new XmlParser().parse(persistFile)
-    def props = persist?.'persistence-unit'?.'properties'[0]
-    if (!props) throw new RuntimeException("persistence.xml file is setup incorrectly")
+    def punit = persist?.'persistence-unit'[0] as Node
+    if (!punit) throw new RuntimeException("persistence.xml file is setup incorrectly! persistence-unit was not found.")
+    def props = punit?.'properties'[0]
+    if (!props) {
+        println "\tProperties of persistence.xml was not found!"
+        props = new NodeBuilder().'properties'() {}
+        punit.append(props)
+    }
     editProperty(props as Node, 'javax.persistence.jdbc.driver', 'com.mysql.jdbc.Driver')
-    editProperty(props as Node, 'javax.persistence.jdbc.url', 'jdbc:mysql://localhost:3306/VSA_PR1')
+    editProperty(props as Node, 'javax.persistence.jdbc.url', 'jdbc:mysql://localhost:3306/VSA_PR1?useSSL=false&amp;serverTimezone=UTC')
     editProperty(props as Node, 'javax.persistence.jdbc.user', 'vsa')
     editProperty(props as Node, 'javax.persistence.jdbc.password', 'vsa')
     editProperty(props as Node, 'javax.persistence.schema-generation.database.action', 'drop-and-create')
     editProperty(props as Node, 'eclipselink.target-database', 'MySQL')
+    editProperty(props as Node, 'eclipselink.logging.level.sql', 'FINE')
+    editProperty(props as Node, 'eclipselink.logging.parameters', 'true')
     def xmlString = XmlUtil.serialize(persist)
     persistFile.text = xmlString
 }

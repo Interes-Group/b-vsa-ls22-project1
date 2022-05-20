@@ -30,7 +30,6 @@ class CarTypeTest {
     @BeforeEach
     void beforeEach() {
         clearDB(mysql);
-        clearCarTypeDB(mysql);
     }
 
     @Test
@@ -49,10 +48,10 @@ class CarTypeTest {
         Object type = carParkService.createCarType(CAR_TYPE_NAME);
         assertNotNull(type);
         testShouldHaveId(type);
-        Object found = carParkService.getCarType(getFieldValue(type, "id", Long.class));
+        Object found = carParkService.getCarType(getEntityId(type));
         assertNotNull(found);
         testShouldHaveId(found);
-        assertEquals(getFieldValue(type, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(type), getEntityId(found));
     }
 
     @Test
@@ -68,7 +67,7 @@ class CarTypeTest {
         assertEquals(2, list.size());
         assertTrue(list.stream().anyMatch(t -> {
             try {
-                return Objects.equals(getFieldValue(t, "id"), getFieldValue(type1, "id"));
+                return Objects.equals(getEntityId(t), getEntityId(type1));
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 return false;
@@ -76,7 +75,7 @@ class CarTypeTest {
         }));
         assertTrue(list.stream().anyMatch(t -> {
             try {
-                return Objects.equals(getFieldValue(t, "id"), getFieldValue(type2, "id"));
+                return Objects.equals(getEntityId(t), getEntityId(type2));
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 return false;
@@ -92,7 +91,7 @@ class CarTypeTest {
         Object found = carParkService.getCarType(CAR_TYPE_NAME);
         assertNotNull(found);
         testShouldHaveId(found);
-        assertEquals(getFieldValue(type, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(type), getEntityId(found));
     }
 
     @Test
@@ -100,9 +99,9 @@ class CarTypeTest {
         Object type = carParkService.createCarType(CAR_TYPE_NAME);
         assertNotNull(type);
         testShouldHaveId(type);
-        Object deleted = carParkService.deleteCarType(getFieldValue(type, "id", Long.class));
+        Object deleted = carParkService.deleteCarType(getEntityId(type));
         assertNotNull(deleted);
-        Object notFound = carParkService.getCarType(getFieldValue(type, "id", Long.class));
+        Object notFound = carParkService.getCarType(getEntityId(type));
         assertNull(notFound);
     }
 
@@ -113,9 +112,9 @@ class CarTypeTest {
         testShouldHaveId(type);
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv,
-                getFieldValue(type, "id", Long.class));
+                getEntityId(type));
         assertNotNull(car);
         testShouldHaveId(car);
         Object carType = null;
@@ -125,9 +124,9 @@ class CarTypeTest {
             carType = getFieldValue(car, "carType");
         }
         if (carType != null) {
-            Object found = carParkService.getCarType(getFieldValue(carType, "id", Long.class));
+            Object found = carParkService.getCarType(getEntityId(carType));
             assertNotNull(found);
-            assertEquals(getFieldValue(type, "id"), getFieldValue(found, "id"));
+            assertEquals(getEntityId(type), getEntityId(found));
         } else {
             throw new RuntimeException("Could not test car type on car entity!");
         }
@@ -138,11 +137,11 @@ class CarTypeTest {
         Object type = carParkService.createCarType(CAR_TYPE_NAME);
         assertNotNull(type);
         testShouldHaveId(type);
-        Long typeId = getFieldValue(type, "id", Long.class);
+        Long typeId = getEntityId(type);
         Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object carParkFloor = carParkService.createCarParkFloor(carParkId, CarPark.floor);
         assertNotNull(carParkFloor);
         Object spot = carParkService.createParkingSpot(carParkId, CarPark.floor, CarPark.spot, typeId);
@@ -155,9 +154,9 @@ class CarTypeTest {
             carType = getFieldValue(spot, "carType");
         }
         if (carType != null) {
-            Object found = carParkService.getCarType(getFieldValue(carType, "id", Long.class));
+            Object found = carParkService.getCarType(getEntityId(carType));
             assertNotNull(found);
-            assertEquals(typeId, getFieldValue(found, "id"));
+            assertEquals(typeId, getEntityId(found));
         } else {
             throw new RuntimeException("Could not test car type on parking spot entity!");
         }

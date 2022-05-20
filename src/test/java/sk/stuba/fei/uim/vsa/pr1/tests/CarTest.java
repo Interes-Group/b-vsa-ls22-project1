@@ -43,7 +43,7 @@ class CarTest {
             user = getFieldValue(car, "owner");
         }
         if (user != null) {
-            Object foundUser = carParkService.getUser(getFieldValue(user, "id", Long.class));
+            Object foundUser = carParkService.getUser(getEntityId(user));
             assertNotNull(foundUser);
         }
     }
@@ -51,16 +51,16 @@ class CarTest {
     private Object createNewCar() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
-        return carParkService.createCar(getFieldValue(user, "id", Long.class),
+        return carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
     }
 
     @Test
     void CAR02_shouldGetCarById() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object car = createNewCar();
-        Object found = carParkService.getCar(getFieldValue(car, "id", Long.class));
+        Object found = carParkService.getCar(getEntityId(car));
         assertNotNull(found);
-        assertEquals(getFieldValue(car, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(car), getEntityId(found));
     }
 
     @Test
@@ -68,7 +68,7 @@ class CarTest {
         Object car = createNewCar();
         Object found = carParkService.getCar(TestData.Car.ecv);
         assertNotNull(found);
-        assertEquals(getFieldValue(car, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(car), getEntityId(found));
     }
 
     @Test
@@ -76,17 +76,17 @@ class CarTest {
         Object car = createNewCar();
         List<Object> users = carParkService.getUsers();
         assertEquals(1, users.size());
-        List<Object> cars = carParkService.getCars(getFieldValue(users.get(0), "id", Long.class));
+        List<Object> cars = carParkService.getCars(getEntityId(users.get(0)));
         assertNotNull(cars);
         assertEquals(1, cars.size());
         assertEquals(car.getClass(), cars.get(0).getClass());
-        assertEquals(getFieldValue(car, "id"), getFieldValue(cars.get(0), "id"));
+        assertEquals(getEntityId(car), getEntityId(cars.get(0)));
     }
 
     @Test
     void CAR06_shouldDeleteCar() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object car = createNewCar();
-        Object deleted = carParkService.deleteCar(getFieldValue(car, "id", Long.class));
+        Object deleted = carParkService.deleteCar(getEntityId(car));
         assertNotNull(deleted);
         Object notFound = carParkService.getCar(TestData.Car.ecv);
         assertNull(notFound);

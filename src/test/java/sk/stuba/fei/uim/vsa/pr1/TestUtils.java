@@ -4,14 +4,9 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,20 +94,21 @@ public class TestUtils {
         return str.substring(0, 1).toLowerCase() + str.substring(1);
     }
 
+    public static Long getEntityId(Object obj) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        String[] fields = findFieldByNameAndType(obj, "id", Long.class);
+        if (fields != null && fields.length > 0) {
+            if (fields.length > 1)
+                log("WARNING: More than one potential id field find on object of class " + obj.getClass().getName());
+            return getFieldValue(obj, fields[0], Long.class);
+        }
+        return null;
+    }
+
     public static void testShouldHaveId(Object obj) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Long id = getFieldValue(obj, "id", Long.class);
+        Long id = getEntityId(obj);
         assertNotNull(id);
         assertEquals(Long.class, id.getClass());
         assertTrue(id > 0);
-    }
-
-    public static void runSQLStatement(Connection con, String sql, boolean silent) {
-        try (Statement stmt = con.createStatement()) {
-            stmt.executeUpdate(sql);
-        } catch (SQLException ex) {
-            if (!silent)
-                ex.printStackTrace();
-        }
     }
 
     public static AbstractCarParkService getServiceClass() {
@@ -138,38 +134,33 @@ public class TestUtils {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db, username, password);
     }
 
+    public static void runSQLStatement(Connection con, String sql, boolean silent) {
+        try (Statement stmt = con.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException ex) {
+            if (!silent)
+                ex.printStackTrace();
+        }
+    }
+
+    public static List<String> tables = new ArrayList<>();
+
     public static void clearDB(Connection mysql) {
+        if (tables.isEmpty()) {
+            try (Statement stmt = mysql.createStatement()) {
+                ResultSet set = stmt.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema = (SELECT DATABASE())");
+                while (set.next()) {
+                    String table = set.getString("table_name");
+                    if (!Objects.equals(table, "SEQUENCE")) {
+                        tables.add(table);
+                    }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
         runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=0", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE CAR", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE USER", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE CAR_PARK", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE CAR_PARK_FLOOR", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE PARKING_SPOT", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE RESERVATION", true);
+        tables.forEach(table -> runSQLStatement(mysql, "TRUNCATE TABLE " + table, false));
         runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=1", true);
     }
-
-    public static void clearHolidayDB(Connection mysql) {
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=0", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE HOLIDAY", true);
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=1", true);
-    }
-
-    public static void clearCarTypeDB(Connection mysql) {
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=0", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE CAR_TYPE", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE CARTYPE", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE TYPE", true);
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=1", true);
-    }
-
-    public static void clearCouponDB(Connection mysql) {
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=0", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE COUPON", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE DISCOUNT_COUPON", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE DISCOUNTCOUPON", true);
-        runSQLStatement(mysql, "TRUNCATE TABLE USER_COUPON", true);
-        runSQLStatement(mysql, "SET FOREIGN_KEY_CHECKS=1", true);
-    }
-
 }

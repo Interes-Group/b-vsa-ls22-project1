@@ -41,9 +41,9 @@ class UserTest {
     @Test
     void USER02_shouldCreateAndGetUserById() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object found = carParkService.getUser(getFieldValue(user, "id", Long.class));
+        Object found = carParkService.getUser(getEntityId(user));
         assertNotNull(found);
-        assertEquals(getFieldValue(user, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(user), getEntityId(found));
     }
 
     @Test
@@ -51,7 +51,7 @@ class UserTest {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         Object found = carParkService.getUser(TestData.User.email);
         assertNotNull(found);
-        assertEquals(getFieldValue(user, "id"), getFieldValue(found, "id"));
+        assertEquals(getEntityId(user), getEntityId(found));
     }
 
     @Test
@@ -61,14 +61,14 @@ class UserTest {
         assertNotNull(users);
         assertEquals(1, users.size());
         assertEquals(user.getClass(), users.get(0).getClass());
-        assertEquals(getFieldValue(user, "id"), getFieldValue(users.get(0), "id"));
+        assertEquals(getEntityId(user), getEntityId(users.get(0)));
     }
 
     @Test
     void USER06_shouldCreateAndDeleteUser() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
-        Object deleted = carParkService.deleteUser(getFieldValue(user, "id", Long.class));
+        Object deleted = carParkService.deleteUser(getEntityId(user));
         assertNotNull(deleted);
         Object found = carParkService.getUser(TestData.User.email);
         assertNull(found);

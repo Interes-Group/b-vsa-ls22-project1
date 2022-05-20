@@ -14,7 +14,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static sk.stuba.fei.uim.vsa.pr1.TestData.*;
 import static sk.stuba.fei.uim.vsa.pr1.TestUtils.*;
-import static sk.stuba.fei.uim.vsa.pr1.TestUtils.clearHolidayDB;
 
 class CarParkFloorEmbeddedIdTest {
 
@@ -30,7 +29,6 @@ class CarParkFloorEmbeddedIdTest {
     @BeforeEach
     void beforeEach() {
         clearDB(mysql);
-        clearHolidayDB(mysql);
     }
 
     @Test
@@ -135,7 +133,7 @@ class CarParkFloorEmbeddedIdTest {
 
 
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -174,7 +172,7 @@ class CarParkFloorEmbeddedIdTest {
             }
             List<Object> floors = carParkService.getCarParkFloors(id);
             assertNotNull(floors);
-            assertEquals(floors.size(), 1);
+            assertEquals(1, floors.size());
 
             Object a = carParkService.deleteCarParkFloor(id, "Floor1");
             if (a == null) {
@@ -204,17 +202,14 @@ class CarParkFloorEmbeddedIdTest {
                 if (floors == null || floors.isEmpty()) {
                     assertTrue(true);
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             } catch (Exception e) {
                 assertTrue(true);
             }
-
-
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
-
     }
 
 

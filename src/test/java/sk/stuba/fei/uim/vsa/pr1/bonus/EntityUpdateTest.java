@@ -31,13 +31,12 @@ class EntityUpdateTest {
     @BeforeEach
     void beforeEach() {
         clearDB(mysql);
-        clearHolidayDB(mysql);
     }
 
     @Test
     void BONUSU01_shouldUpdateCarBrandAndModel() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
 
         if (hasField(car, "brand") && hasField(car, "model")) {
@@ -50,7 +49,7 @@ class EntityUpdateTest {
             assertNotNull(updated);
             assertEquals(newBrand, getFieldValue(updated, "brand", String.class));
             assertEquals(newModel, getFieldValue(updated, "model", String.class));
-            assertEquals(getFieldValue(car, "id"), getFieldValue(updated, "id"));
+            assertEquals(getEntityId(car), getEntityId(updated));
         } else {
             fail("Car object does not have a brand and a model property. So this test cannot be performed!");
         }
@@ -65,7 +64,7 @@ class EntityUpdateTest {
             Object updated = carParkService.updateUser(user);
             assertNotNull(updated);
             assertEquals(newEmail, getFieldValue(updated, "email", String.class));
-            assertEquals(getFieldValue(user, "id"), getFieldValue(updated, "id"));
+            assertEquals(getEntityId(user), getEntityId(updated));
         } else {
             fail("User object does not have email property. So this test cannot be performed!");
         }
@@ -153,7 +152,7 @@ class EntityUpdateTest {
             }
 
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -162,7 +161,7 @@ class EntityUpdateTest {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         assertNotNull(carParkId);
 
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor1");
@@ -184,8 +183,8 @@ class EntityUpdateTest {
 
         Object fl1Spot1 = carParkService.updateParkingSpot(floor1Spot1);
         assertNotNull(fl1Spot1);
-        Long floor1Spot1Id = getFieldValue(floor1Spot1, "id", Long.class);
-        Long fl1Spot1Id = getFieldValue(fl1Spot1, "id", Long.class);
+        Long floor1Spot1Id = getEntityId(floor1Spot1);
+        Long fl1Spot1Id = getEntityId(fl1Spot1);
         assertNotNull(floor1Spot1Id);
         assertNotNull(fl1Spot1Id);
         assertEquals(floor1Spot1Id, fl1Spot1Id);
@@ -195,7 +194,7 @@ class EntityUpdateTest {
 
         Object f1 = carParkService.getParkingSpot(floor1Spot1Id);
         assertNotNull(f1);
-        Long f1Id = getFieldValue(f1, "id", Long.class);
+        Long f1Id = getEntityId(f1);
         assertNotNull(f1Id);
         assertEquals(f1Id, floor1Spot1Id);
         for (String f : spotFields) {
@@ -208,18 +207,18 @@ class EntityUpdateTest {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor3-1");
         assertNotNull(floor1);
         Object spot1 = carParkService.createParkingSpot(carParkId, "Floor3-1", "1.01");
         assertNotNull(spot1);
         testShouldHaveId(spot1);
-        Long spot1Id = getFieldValue(spot1, "id", Long.class);
+        Long spot1Id = getEntityId(spot1);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spot1Id, carId);
         assertNotNull(reservation);

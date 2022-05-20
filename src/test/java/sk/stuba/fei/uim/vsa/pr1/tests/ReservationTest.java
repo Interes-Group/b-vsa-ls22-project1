@@ -93,18 +93,18 @@ class ReservationTest {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor3-1");
         assertNotNull(floor1);
         Object spot1 = carParkService.createParkingSpot(carParkId, "Floor3-1", "1.01");
         assertNotNull(spot1);
         testShouldHaveId(spot1);
-        Long spot1Id = getFieldValue(spot1, "id", Long.class);
+        Long spot1Id = getEntityId(spot1);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spot1Id, carId);
         assertNotNull(reservation);
@@ -113,9 +113,9 @@ class ReservationTest {
         log("Waiting for simulating parking clock");
         Thread.sleep(3000);
 
-        Object ended = carParkService.endReservation(getFieldValue(reservation, "id", Long.class));
+        Object ended = carParkService.endReservation(getEntityId(reservation));
         assertNotNull(ended);
-        assertEquals(getFieldValue(reservation, "id", Long.class), getFieldValue(ended, "id", Long.class));
+        assertEquals(getEntityId(reservation), getEntityId(ended));
 
         String[] localDateFields = findFieldByType(ended, LocalDateTime.class);
         if (localDateFields.length > 0) {
@@ -174,18 +174,18 @@ class ReservationTest {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor3-1");
         assertNotNull(floor1);
         Object spot1 = carParkService.createParkingSpot(carParkId, "Floor3-1", "1.01");
         assertNotNull(spot1);
         testShouldHaveId(spot1);
-        Long spot1Id = getFieldValue(spot1, "id", Long.class);
+        Long spot1Id = getEntityId(spot1);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spot1Id, carId);
         assertNotNull(reservation);
@@ -194,7 +194,7 @@ class ReservationTest {
         List<Object> reservations = carParkService.getReservations(spot1Id, new Date());
         assertNotNull(reservations);
         assertEquals(1, reservations.size());
-        assertEquals(getFieldValue(reservation, "id", Long.class), getFieldValue(reservations.get(0), "id", Long.class));
+        assertEquals(getEntityId(reservation), getEntityId(reservations.get(0)));
     }
 
     @Test
@@ -202,27 +202,27 @@ class ReservationTest {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor3-1");
         assertNotNull(floor1);
         Object spot1 = carParkService.createParkingSpot(carParkId, "Floor3-1", "1.01");
         assertNotNull(spot1);
         testShouldHaveId(spot1);
-        Long spot1Id = getFieldValue(spot1, "id", Long.class);
+        Long spot1Id = getEntityId(spot1);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spot1Id, carId);
         assertNotNull(reservation);
         testShouldHaveId(reservation);
 
-        List<Object> usersReservations = carParkService.getMyReservations(getFieldValue(user, "id", Long.class));
+        List<Object> usersReservations = carParkService.getMyReservations(getEntityId(user));
         assertNotNull(usersReservations);
         assertEquals(1, usersReservations.size());
-        assertEquals(getFieldValue(reservation, "id", Long.class), getFieldValue(usersReservations.get(0), "id", Long.class));
+        assertEquals(getEntityId(reservation), getEntityId(usersReservations.get(0)));
     }
 
     private <T> T getStartDateField(Object reservation, Class<T> dateClass) {

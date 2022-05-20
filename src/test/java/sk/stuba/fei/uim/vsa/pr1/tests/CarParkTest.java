@@ -38,11 +38,11 @@ class CarParkTest {
         Object carPark = carParkService.createCarPark("test1", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long id = getFieldValue(carPark, "id", Long.class);
+        Long id = getEntityId(carPark);
         assertNotNull(id);
         Object carPark2 = carParkService.getCarPark(id);
         assertNotNull(carPark2);
-        assertEquals(id, getFieldValue(carPark2, "id", Long.class));
+        assertEquals(id, getEntityId(carPark2));
     }
 
     @Test
@@ -75,7 +75,7 @@ class CarParkTest {
                 assertEquals(a1, a2);
             }
         } catch (Exception ex) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -115,7 +115,7 @@ class CarParkTest {
         List<Object> parks = carParkService.getCarParks();
         assertNotNull(parks);
         assertFalse(parks.isEmpty());
-        assertEquals(parks.size(), 2);
+        assertEquals(2, parks.size());
         try {
             Long carPark1Id = (Long) getId.invoke(carPark);
             Long carPark2Id = (Long) getId.invoke(carPark2);
@@ -142,7 +142,7 @@ class CarParkTest {
                         assertEquals(carPark2S, park2S);
                     }
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             } else if (carPark1Id.equals(park2Id)) {
                 if (carPark2Id.equals(park1Id)) {
@@ -160,17 +160,14 @@ class CarParkTest {
                         assertEquals(carPark2S, park1S);
                     }
                 } else {
-                    assertTrue(false);
+                    fail();
                 }
             } else {
-                assertTrue(false);
+                fail();
             }
-
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
-
-
     }
 
     @Test
@@ -200,7 +197,7 @@ class CarParkTest {
                 assertTrue(true);
             }
         } catch (Exception e) {
-            assertTrue(false);
+            fail();
         }
 
     }
