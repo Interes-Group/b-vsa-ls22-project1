@@ -4,15 +4,17 @@ import groovy.sql.Sql
 
 import groovy.xml.XmlUtil
 
+import javax.swing.*
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.time.Duration
 import java.time.LocalDateTime
 
 // CONSTANTS
+Boolean ALL = false
 String CWD = new File("..").absolutePath
 String TEST_PROJECT = new File(CWD + File.separator + "b-vsa-ls22-project1").absolutePath
-String STUDENT_GROUP = "c"
+String STUDENT_GROUP = "a"
 String FEEDBACK_DIR = "feedback"
 String SOURCE_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1'])
 String TARGET_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1' + STUDENT_GROUP])
@@ -27,6 +29,8 @@ String MAVEN_ERRORS = 'test-error-output.txt'
 String SUREFIRE_REPORTS = 'surefire-test-reports'
 Integer MAX_POINTS = 20
 Integer MAX_BONUS_POINTS = 5
+
+def input = JOptionPane.&showInputDialog
 
 
 // CLASSES
@@ -378,12 +382,8 @@ def runTestProcedure = { File project, File outputs, File errors, File surefireX
     return evaluateTests(surefireTxt, outputs.getName().contains('bonus'))
 }
 
-LocalDateTime startOfScript = LocalDateTime.now()
-println "Evaluating students projects in Group " + STUDENT_GROUP.toUpperCase()
-println "\n"
-File[] files = new File("$CWD${File.separator}skupina${STUDENT_GROUP.toUpperCase()}").listFiles()
-for (File project : files) {
-    if (!project.isDirectory()) continue
+def evaluateStudent = { File project ->
+    if (!project.isDirectory()) return null
     LocalDateTime startOfTest = LocalDateTime.now()
     println "Starting evaluation of student ${project.getName()}"
     Evaluation student = new Evaluation()
@@ -454,19 +454,38 @@ for (File project : files) {
         else if (outFile.text.contains('T E S T S'))
             student.notes += 'Maven Tests failed'
     }
-    results << student
     student.testDuration = Duration.between(startOfTest, LocalDateTime.now())
     buildSummaryFile(student, project)
     println "Test took ${student.testDuration.toString()}"
     println "-----------------------------\n"
+    return student
 }
 
-def resultFile = new File(CWD + File.separator + "results-${STUDENT_GROUP}.csv")
-resultFile.text = String.join(CSV_DELIMITER, CSV_HEADER) + '\n'
-results.each {
-    resultFile.append(it.toString(CSV_DELIMITER))
-    resultFile.append("\n")
+LocalDateTime startOfScript = LocalDateTime.now()
+
+if (ALL) {
+    println "Evaluating students projects in Group " + STUDENT_GROUP.toUpperCase()
+    println "\n"
+    File[] files = new File("$CWD${File.separator}skupina${STUDENT_GROUP.toUpperCase()}").listFiles()
+    for (File project : files) {
+        Evaluation e = evaluateStudent(project)
+        results << e
+    }
+
+    def resultFile = new File(CWD + File.separator + "results-${STUDENT_GROUP}.csv")
+    resultFile.text = String.join(CSV_DELIMITER, CSV_HEADER) + '\n'
+    results.each {
+        resultFile.append(it.toString(CSV_DELIMITER))
+        resultFile.append("\n")
+    }
+} else {
+    def projectDir = input "Enter students folder to test"
+    if (!projectDir)
+        throw new RuntimeException("No student's folder were entered!")
+    Evaluation e = evaluateStudent(new File("$CWD${File.separator}skupina${STUDENT_GROUP.toUpperCase()}${File.separator}$projectDir"))
+    println e
 }
+
 println "Tests run for all tests took ${Duration.between(startOfScript, LocalDateTime.now()).toString()}"
 
 
