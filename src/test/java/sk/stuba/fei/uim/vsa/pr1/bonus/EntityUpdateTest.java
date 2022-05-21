@@ -298,5 +298,50 @@ class EntityUpdateTest {
         }
     }
 
+    //@Test
+    void BONUSU06_updateCarParkFloorTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
+        Object carPark = carParkService.createCarPark("test6", "testtest", 12);
+        assertNotNull(carPark);
+        Long carParkId = getEntityId(carPark);
+        assertNotNull(carParkId);
+        Object carParkFloor = carParkService.createCarParkFloor(carParkId, "Floor1");
+        testShouldHaveId(carParkFloor);
+
+        Long carParkFloorId = getEntityId(carParkFloor);
+        assertNotNull(carParkFloorId);
+
+        Object floor = carParkService.getCarParkFloor(carParkFloorId);
+        Long floorId = getEntityId(floor);
+        assertEquals(carParkFloorId, floorId);
+
+        String[] fields = findFieldByType(carParkFloor, String.class);
+
+        for (String f : fields) {
+            assertEquals(getFieldValue(carParkFloor, f, String.class), getFieldValue(floor, f, String.class));
+        }
+
+        for (String f : fields) {
+            setFieldValue(carParkFloor, f, "Modified");
+        }
+
+        Object modifiedFloor = carParkService.updateCarParkFloor(carParkFloor);
+        assertNotNull(modifiedFloor);
+        Long modifiedFloorId = getEntityId(modifiedFloor);
+
+        assertEquals(carParkFloorId, modifiedFloorId);
+
+        floor = carParkService.getCarParkFloor(carParkFloorId);
+        floorId = getEntityId(floor);
+        assertEquals(floorId, carParkFloorId);
+
+        for (String f : fields) {
+            assertEquals(getFieldValue(carParkFloor, f, String.class), getFieldValue(modifiedFloor, f, String.class));
+            assertEquals(getFieldValue(carParkFloor, f, String.class), getFieldValue(floor, f, String.class));
+        }
+
+
+        //assertTrue(false);
+    }
 
 }

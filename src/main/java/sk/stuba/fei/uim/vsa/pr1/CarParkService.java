@@ -173,6 +173,7 @@ public class CarParkService extends AbstractCarParkService {
         emb.setIdentifier(floorIdentifier);
         emb.setCarParkId(carParkId);
         c.setEmbeddedId(emb);
+        c.generateId();
 
         carPark.addCarParkFloor(c);
         try {
@@ -205,7 +206,10 @@ public class CarParkService extends AbstractCarParkService {
 
     @Override
     public Object getCarParkFloor(Long carParkFloorId) {
-        return null;
+        if (carParkFloorId == null) return null;
+        return getObject("select c from CarParkFloor c where c.id = :floorId",
+                CarParkFloor.class,
+                Collections.singletonMap("floorId", carParkFloorId));
     }
 
     @Override
@@ -222,7 +226,7 @@ public class CarParkService extends AbstractCarParkService {
 
     @Override
     public Object updateCarParkFloor(Object carParkFloor) {
-        return null;
+        return null; // nemá zmysel pri embedovanom kľúči
     }
 
     @Override
@@ -275,8 +279,10 @@ public class CarParkService extends AbstractCarParkService {
 
     @Override
     public Object deleteCarParkFloor(Long carParkFloorId) {
-
-        return null;
+        if (carParkFloorId == null) return null;
+        CarParkFloor floor = (CarParkFloor) getCarParkFloor(carParkFloorId);
+        if (floor == null) return null;
+        return deleteCarParkFloor(floor.getEmbeddedId().getCarParkId(), floor.getEmbeddedId().getIdentifier());
     }
 
     @Override

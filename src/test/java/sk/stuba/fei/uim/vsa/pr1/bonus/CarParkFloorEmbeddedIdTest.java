@@ -212,5 +212,141 @@ class CarParkFloorEmbeddedIdTest {
         }
     }
 
+    @Test
+    void BONUSE03_getAllCarParkFloorsEmbedded() {
+        try {
+            Object carPark = carParkService.createCarPark("test5", "testtest", 12);
+            assertNotNull(carPark);
+            Class c = carPark.getClass();
+            Method[] methods = c.getMethods();
+            Method getId = null;
+            for (Method m : methods) {
+                if (m.getReturnType() == Long.class) {
+                    getId = m;
+                    break;
+                }
+            }
+            assertNotNull(getId);
+            Long id = (Long) getId.invoke(carPark);
+
+
+            Object carParkFloor1 = carParkService.createCarParkFloor(id, "Floor1");
+            assertNotNull(carParkFloor1);
+
+            /*Object floor1 = carParkService.getCarParkFloor(id, "Floor1");
+            assertNotNull(floor1);*/
+
+            Object carParkFloor2 = carParkService.createCarParkFloor(id, "Floor2");
+            assertNotNull(carParkFloor2);
+
+            /*Object floor2 =  carParkService.getCarParkFloor(id, "Floor2");
+            assertNotNull(floor2);*/
+
+            Class floorClass = carParkFloor1.getClass();
+            Class embeddedKeyClass = null;
+            Method getEmbeddedKeyMethod = null;
+            for (Method m : floorClass.getMethods()) {
+                if (!Collection.class.isAssignableFrom(m.getReturnType())
+                        && m.getReturnType() != String.class
+                        && m.getReturnType() != Long.class
+                        && m.getReturnType() != c
+                        && m.getParameterCount() == 0) {
+                    embeddedKeyClass = m.getReturnType();
+                    getEmbeddedKeyMethod = m;
+                    break;
+                }
+            }
+
+            assertNotNull(embeddedKeyClass);
+            assertNotNull(getEmbeddedKeyMethod);
+
+            Method carParkFloorEmbeddedStringMethod = null;
+            Method carParkFloorEmbeddedIdMethod = null;
+
+            for (Method m : embeddedKeyClass.getMethods()) {
+                if (m.getParameterCount() == 0) {
+                    if (m.getReturnType() == Long.class) {
+                        carParkFloorEmbeddedIdMethod = m;
+                    } else if (m.getReturnType() == String.class && !m.getName().equals("toString")) {
+                        carParkFloorEmbeddedStringMethod = m;
+                    }
+                }
+
+            }
+
+            assertNotNull(carParkFloorEmbeddedIdMethod);
+            assertNotNull(carParkFloorEmbeddedStringMethod);
+
+            Object carParkFloor1EmbeddedKey = getEmbeddedKeyMethod.invoke(carParkFloor1);
+            //Object floor1EmbeddedKey = getEmbeddedKeyMethod.invoke(floor1);
+            assertNotNull(carParkFloor1EmbeddedKey);
+            //assertNotNull(floor1EmbeddedKey);
+
+            /*assertEquals(
+                    carParkFloorEmbeddedIdMethod.invoke(carParkFloor1EmbeddedKey),
+                    carParkFloorEmbeddedIdMethod.invoke(floor1EmbeddedKey)
+            );*/
+
+            Object carParkFloor2EmbeddedKey = getEmbeddedKeyMethod.invoke(carParkFloor2);
+            //Object floor2EmbeddedKey = getEmbeddedKeyMethod.invoke(floor2);
+
+            assertNotNull(carParkFloor2EmbeddedKey);
+            //assertNotNull(floor2EmbeddedKey);
+
+            /*assertEquals(
+                    carParkFloorEmbeddedIdMethod.invoke(carParkFloor2EmbeddedKey),
+                    carParkFloorEmbeddedIdMethod.invoke(floor2EmbeddedKey)
+            );*/
+
+
+            String cF1 = (String) carParkFloorEmbeddedStringMethod.invoke(carParkFloor1EmbeddedKey);
+            //String f1 = (String)carParkFloorEmbeddedStringMethod.invoke(floor1EmbeddedKey);
+            String cF2 = (String) carParkFloorEmbeddedStringMethod.invoke(carParkFloor2EmbeddedKey);
+            //String f2 = (String)carParkFloorEmbeddedStringMethod.invoke(floor2EmbeddedKey);
+
+            assertNotNull(cF1);
+            //assertNotNull(f1);
+            assertNotNull(cF2);
+            //assertNotNull(f2);
+
+            /*assertEquals(cF1, f1);
+            assertEquals(cF2, f2);*/
+
+            List<Object> floors = carParkService.getCarParkFloors(id);
+            assertEquals(2, floors.size());
+            Object fl = floors.get(0);
+            // gotta find which one it is, floor1 or floor2
+            Object embFl = getEmbeddedKeyMethod.invoke(fl);
+            assertNotNull(embFl);
+            String emfFlId = (String) carParkFloorEmbeddedStringMethod.invoke(embFl);
+            assertNotNull(emfFlId);
+
+            Object fl2 = floors.get(1);
+            // gotta find which one it is, floor1 or floor2
+            Object embFl2 = getEmbeddedKeyMethod.invoke(fl2);
+            assertNotNull(embFl2);
+            String emfFlId2 = (String) carParkFloorEmbeddedStringMethod.invoke(embFl2);
+            assertNotNull(emfFlId2);
+
+            if (emfFlId.equals(cF1)) {
+                assertEquals(emfFlId2, cF2);
+            } else if (emfFlId.equals(cF2)) {
+                assertEquals(emfFlId2, cF1);
+            } else {
+                fail();
+            }
+        } catch (Exception e) {
+            fail();
+        }
+        /*List<Object> floors = carParkService.getCarParkFloors(carParkId);
+            assertEquals(floors.size(), 2);
+
+            Object floor1 = floors.get(1);
+
+            for (Object fl : floors) {
+
+            }*/
+    }
+
 
 }

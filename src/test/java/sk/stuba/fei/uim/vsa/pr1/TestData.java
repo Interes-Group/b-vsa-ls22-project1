@@ -53,6 +53,7 @@ public class TestData {
         public static final String address = "Ulica 123";
         public static final Integer price = 12;
         public static final String floor = "Floor 1-1";
+        public static final String floorAlt = "Floor 1.2";
         public static final String spot = "1.01";
     }
 
