@@ -291,7 +291,7 @@ def editPersistence = { File project ->
         punit.append(props)
     }
     editProperty(props as Node, 'javax.persistence.jdbc.driver', 'com.mysql.jdbc.Driver')
-    editProperty(props as Node, 'javax.persistence.jdbc.url', 'jdbc:mysql://localhost:3306/VSA_PR1?useSSL=false&amp;serverTimezone=UTC')
+    editProperty(props as Node, 'javax.persistence.jdbc.url', 'jdbc:mysql://localhost:3306/VSA_PR1?serverTimezone=UTC')
     editProperty(props as Node, 'javax.persistence.jdbc.user', 'vsa')
     editProperty(props as Node, 'javax.persistence.jdbc.password', 'vsa')
     editProperty(props as Node, 'javax.persistence.schema-generation.database.action', 'drop-and-create')
