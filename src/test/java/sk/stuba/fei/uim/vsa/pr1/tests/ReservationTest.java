@@ -10,12 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sk.stuba.fei.uim.vsa.pr1.TestData.*;
@@ -42,18 +37,18 @@ class ReservationTest {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
-        Long carParkId = getFieldValue(carPark, "id", Long.class);
+        Long carParkId = getEntityId(carPark);
         Object floor1 = carParkService.createCarParkFloor(carParkId, "Floor3-1");
         assertNotNull(floor1);
         Object spot1 = carParkService.createParkingSpot(carParkId, "Floor3-1", "1.01");
         assertNotNull(spot1);
         testShouldHaveId(spot1);
-        Long spot1Id = getFieldValue(spot1, "id", Long.class);
+        Long spot1Id = getEntityId(spot1);
 
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
-        Object car = carParkService.createCar(getFieldValue(user, "id", Long.class),
+        Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
-        Long carId = getFieldValue(car, "id", Long.class);
+        Long carId = getEntityId(car);
 
         Object reservation = carParkService.createReservation(spot1Id, carId);
         assertNotNull(reservation);
@@ -77,13 +72,13 @@ class ReservationTest {
                 } else {
                     GregorianCalendar gregorianTime = getStartDateField(reservation, GregorianCalendar.class);
                     if (gregorianTime != null) {
-                        GregorianCalendar g =(GregorianCalendar) GregorianCalendar.getInstance();
+                        GregorianCalendar g = (GregorianCalendar) GregorianCalendar.getInstance();
                         assertTrue(g.after(gregorianTime));
                     } else {
-                         throw new RuntimeException("Cannot test reservation for starting time. Field not found!");
+                        throw new RuntimeException("Cannot test reservation for starting time. Field not found!");
                     }
                 }
-               
+
             }
         }
     }
@@ -131,12 +126,12 @@ class ReservationTest {
                 } else {
                     String[] gregorianDateFields = findFieldByType(ended, GregorianCalendar.class);
                     if (gregorianDateFields.length > 0) {
-                         assertTrue(Arrays.stream(gregorianDateFields).noneMatch(f -> isFieldNull(ended, f, GregorianCalendar.class)));
+                        assertTrue(Arrays.stream(gregorianDateFields).noneMatch(f -> isFieldNull(ended, f, GregorianCalendar.class)));
                     } else {
                         throw new RuntimeException("Cannot test reservation for start time and end time. Field not found!");
                     }
                 }
-               
+
             }
         }
 

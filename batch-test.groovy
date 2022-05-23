@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 Boolean ALL = false
 String CWD = new File("..").absolutePath
 String TEST_PROJECT = new File(CWD + File.separator + "b-vsa-ls22-project1").absolutePath
-String STUDENT_GROUP = "a"
+String STUDENT_GROUP = "c"
 String FEEDBACK_DIR = "feedback"
 String SOURCE_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1'])
 String TARGET_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1' + STUDENT_GROUP])
@@ -64,7 +64,7 @@ class TestsRun {
     void calcPoints(Double maxPoints = 20.0) {
         if (success == 0)
             calcSuccess()
-        points = Math.ceil((maxPoints / totalRun.doubleValue()) * success.doubleValue()).intValue()
+        points = Math.ceil((maxPoints / (totalRun.doubleValue() - skip.doubleValue())) * success.doubleValue()).intValue()
     }
 
     void calcSuccess() {
@@ -237,6 +237,7 @@ def editPom = { File project ->
         pom.'properties'[0].append(junitProperty)
     }
 
+    createDeps(pom, 'mysql', 'mysql-connector-java', '5.1.49', false)
     createDeps(pom, 'org.junit.jupiter', 'junit-jupiter-engine', '\${junit.version}', true)
     createDeps(pom, 'org.junit.jupiter', 'junit-jupiter-api', '\${junit.version}', true)
     createDeps(pom, 'org.reflections', 'reflections', '0.10.2', false)
