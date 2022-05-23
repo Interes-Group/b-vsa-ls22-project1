@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import sk.stuba.fei.uim.vsa.pr1.AbstractCarParkService;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ class CarParkTest {
     }
 
     @Test
-    void PARK01_createAndGetCarParkTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void PARK01_createAndGetCarParkTest() throws Exception {
         Object carPark = carParkService.createCarPark("test1", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -47,10 +46,10 @@ class CarParkTest {
 
     @Test
     void PARK02_createAndGetCarParkByName() {
-        Object carPark = carParkService.createCarPark("CAR-PARK-NAME", "testtest", 12);
-        assertNotNull(carPark);
-        Class c = carPark.getClass();
         try {
+            Object carPark = carParkService.createCarPark("CAR-PARK-NAME", "testtest", 12);
+            assertNotNull(carPark);
+            Class c = carPark.getClass();
             Method[] methods = c.getMethods();
             Method getId = null;
             List<Method> stringMethods = new ArrayList<>();
@@ -81,8 +80,8 @@ class CarParkTest {
 
     @Test
     void PARK03_uniqueCarParkNameTest() {
-        Object carPark = carParkService.createCarPark("test2", "testtest", 12);
         try {
+            Object carPark = carParkService.createCarPark("test2", "testtest", 12);
             Object carPark2 = carParkService.createCarPark("test2", "testtest", 12);
             assertNull(carPark2);
         } catch (Exception e) {
@@ -92,7 +91,7 @@ class CarParkTest {
 
     @Test
     @Order(1)
-    void PARK04_getCarParksTest() {
+    void PARK04_getCarParksTest() throws Exception {
         Object carPark = carParkService.createCarPark("CAR-PARK-1-1", "test11", 10);
         assertNotNull(carPark);
         Class c = carPark.getClass();
@@ -171,7 +170,7 @@ class CarParkTest {
     }
 
     @Test
-    void PARK06_deleteCarParkTest() {
+    void PARK06_deleteCarParkTest()  throws Exception {
         Object carPark = carParkService.createCarPark("DELETE-CAR-PARK-1", "test11", 10);
         assertNotNull(carPark);
         Class c = carPark.getClass();

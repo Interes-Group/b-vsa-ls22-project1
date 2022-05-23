@@ -34,7 +34,7 @@ class EntityUpdateTest {
     }
 
     @Test
-    void BONUSU01_shouldUpdateCarBrandAndModel() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void BONUSU01_shouldUpdateCarBrandAndModel() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         Object car = carParkService.createCar(getEntityId(user),
                 TestData.Car.brand, TestData.Car.model, TestData.Car.colour, TestData.Car.ecv);
@@ -56,7 +56,7 @@ class EntityUpdateTest {
     }
 
     @Test
-    void BONUSU02_shouldCreateAndUpdateUserByChangingEmail() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void BONUSU02_shouldCreateAndUpdateUserByChangingEmail() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         if (hasField(user, "email")) {
             String newEmail = "jozko.je.super@example.com";
@@ -157,7 +157,7 @@ class EntityUpdateTest {
     }
 
     @Test
-    void BONUSU04_updateParkingSpotWithoutType() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void BONUSU04_updateParkingSpotWithoutType() throws Exception {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 
@@ -203,7 +203,7 @@ class EntityUpdateTest {
     }
 
     @Test
-    void BONUSU05_shouldCreateAndUpdateReservation() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void BONUSU05_shouldCreateAndUpdateReservation() throws Exception {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -299,7 +299,7 @@ class EntityUpdateTest {
     }
 
     //@Test
-    void BONUSU06_updateCarParkFloorTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void BONUSU06_updateCarParkFloorTest() throws Exception {
 
         Object carPark = carParkService.createCarPark("test6", "testtest", 12);
         assertNotNull(carPark);

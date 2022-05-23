@@ -32,14 +32,14 @@ class UserTest {
     }
 
     @Test
-    void USER01_shouldCreateUser() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    void USER01_shouldCreateUser() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
         testShouldHaveId(user);
     }
 
     @Test
-    void USER02_shouldCreateAndGetUserById() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void USER02_shouldCreateAndGetUserById() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         Object found = carParkService.getUser(getEntityId(user));
         assertNotNull(found);
@@ -47,7 +47,7 @@ class UserTest {
     }
 
     @Test
-    void USER03_shouldCreateGetUserByEmail() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void USER03_shouldCreateGetUserByEmail() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         Object found = carParkService.getUser(TestData.User.email);
         assertNotNull(found);
@@ -55,7 +55,7 @@ class UserTest {
     }
 
     @Test
-    void USER04_shouldCreateAndGetAllUsers() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void USER04_shouldCreateAndGetAllUsers() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         List<Object> users = carParkService.getUsers();
         assertNotNull(users);
@@ -65,7 +65,7 @@ class UserTest {
     }
 
     @Test
-    void USER06_shouldCreateAndDeleteUser() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void USER06_shouldCreateAndDeleteUser() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
         Object deleted = carParkService.deleteUser(getEntityId(user));

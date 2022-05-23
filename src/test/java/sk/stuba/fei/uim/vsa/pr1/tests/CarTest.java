@@ -32,7 +32,7 @@ class CarTest {
     }
 
     @Test
-    void CAR01_shouldCreateCar() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void CAR01_shouldCreateCar() throws Exception {
         Object car = createNewCar();
         assertNotNull(car);
         testShouldHaveId(car);
@@ -48,7 +48,7 @@ class CarTest {
         }
     }
 
-    private Object createNewCar() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private Object createNewCar() throws Exception {
         Object user = carParkService.createUser(TestData.User.firstName, TestData.User.lastName, TestData.User.email);
         assertNotNull(user);
         return carParkService.createCar(getEntityId(user),
@@ -56,7 +56,7 @@ class CarTest {
     }
 
     @Test
-    void CAR02_shouldGetCarById() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void CAR02_shouldGetCarById() throws Exception {
         Object car = createNewCar();
         Object found = carParkService.getCar(getEntityId(car));
         assertNotNull(found);
@@ -64,7 +64,7 @@ class CarTest {
     }
 
     @Test
-    void CAR02_shouldGetCarByECV() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void CAR02_shouldGetCarByECV() throws Exception {
         Object car = createNewCar();
         Object found = carParkService.getCar(TestData.Car.ecv);
         assertNotNull(found);
@@ -72,7 +72,7 @@ class CarTest {
     }
 
     @Test
-    void CAR04_shouldGetCarsByUser() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void CAR04_shouldGetCarsByUser() throws Exception {
         Object car = createNewCar();
         List<Object> users = carParkService.getUsers();
         assertEquals(1, users.size());
@@ -84,7 +84,7 @@ class CarTest {
     }
 
     @Test
-    void CAR06_shouldDeleteCar() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void CAR06_shouldDeleteCar() throws Exception {
         Object car = createNewCar();
         Object deleted = carParkService.deleteCar(getEntityId(car));
         assertNotNull(deleted);

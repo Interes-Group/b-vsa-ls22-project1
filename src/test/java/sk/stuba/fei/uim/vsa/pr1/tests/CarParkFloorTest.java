@@ -37,7 +37,7 @@ class CarParkFloorTest {
     }
 
     @Test
-    void FLOOR01_createAndGetCarParkFloor() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void FLOOR01_createAndGetCarParkFloor() throws Exception {
         Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -55,7 +55,7 @@ class CarParkFloorTest {
     }
 
     @Test
-    void FLOOR02_createAndGetAllCarParks() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void FLOOR02_createAndGetAllCarParks() throws Exception {
         Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -91,7 +91,7 @@ class CarParkFloorTest {
     }
 
     @Test
-    void FLOOR03_createAndDeleteCarParkFloor() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void FLOOR03_createAndDeleteCarParkFloor() throws Exception {
         Object carPark = carParkService.createCarPark(CarPark.name, CarPark.address, CarPark.price);
         assertNotNull(carPark);
         testShouldHaveId(carPark);

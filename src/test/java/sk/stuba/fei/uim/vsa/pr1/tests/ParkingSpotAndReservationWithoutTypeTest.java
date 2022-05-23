@@ -41,7 +41,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
     }
 
     @Test
-    void SPOT_RES_01_getAvailableSpotsTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void SPOT_RES_01_getAvailableSpotsTest() throws Exception {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 
@@ -292,7 +292,7 @@ class ParkingSpotAndReservationWithoutTypeTest {
     }
 
     @Test
-    void SPOT_RES_02_getOccupiedParkingSpotsWithoutTypeTest() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void SPOT_RES_02_getOccupiedParkingSpotsWithoutTypeTest() throws Exception {
         Object carPark = carParkService.createCarPark("test7", "testtest", 12);
         assertNotNull(carPark);
 

@@ -33,7 +33,7 @@ class ReservationTest {
     }
 
     @Test
-    void RES01_shouldCreateReservation() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void RES01_shouldCreateReservation() throws Exception {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -84,7 +84,7 @@ class ReservationTest {
     }
 
     @Test
-    void RES02_shouldCreateAndEndReservation() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InterruptedException {
+    void RES02_shouldCreateAndEndReservation() throws Exception {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -165,7 +165,7 @@ class ReservationTest {
     }
 
     @Test
-    void RES03_shouldCreateAndGetReservations() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void RES03_shouldCreateAndGetReservations() throws Exception {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
@@ -193,7 +193,7 @@ class ReservationTest {
     }
 
     @Test
-    void RES04_shouldCreateAndGetReservationByUser() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    void RES04_shouldCreateAndGetReservationByUser() throws Exception {
         Object carPark = carParkService.createCarPark("test8", "testtest", 12);
         assertNotNull(carPark);
         testShouldHaveId(carPark);
