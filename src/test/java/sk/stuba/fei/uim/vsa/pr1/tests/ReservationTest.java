@@ -9,6 +9,7 @@ import sk.stuba.fei.uim.vsa.pr1.TestData;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -75,7 +76,13 @@ class ReservationTest {
                         GregorianCalendar g = (GregorianCalendar) GregorianCalendar.getInstance();
                         assertTrue(g.after(gregorianTime));
                     } else {
-                        throw new RuntimeException("Cannot test reservation for starting time. Field not found!");
+                        Timestamp timestamp = getStartDateField(reservation, Timestamp.class);
+                        if (timestamp != null) {
+                            Timestamp t = Timestamp.valueOf(LocalDateTime.now());
+                            assertTrue(t.after(timestamp));
+                        } else {
+                            throw new RuntimeException("Cannot test reservation for starting time. Field not found!");
+                        }
                     }
                 }
 
@@ -128,7 +135,12 @@ class ReservationTest {
                     if (gregorianDateFields.length > 0) {
                         assertTrue(Arrays.stream(gregorianDateFields).noneMatch(f -> isFieldNull(ended, f, GregorianCalendar.class)));
                     } else {
-                        throw new RuntimeException("Cannot test reservation for start time and end time. Field not found!");
+                        String[] timestampDateFields = findFieldByType(ended, Timestamp.class);
+                        if (timestampDateFields.length > 0) {
+                            assertTrue(Arrays.stream(timestampDateFields).noneMatch(f -> isFieldNull(ended, f, Timestamp.class)));
+                        } else {
+                            throw new RuntimeException("Cannot test reservation for start time and end time. Field not found!");
+                        }
                     }
                 }
 
@@ -159,7 +171,20 @@ class ReservationTest {
                     }
                 }));
             } else {
-                throw new RuntimeException("Cannot test reservation for price. Field not found!");
+                String[] floatPrice = findFieldByType(ended, Float.class);
+                if (floatPrice.length > 0) {
+                    assertTrue(Arrays.stream(floatPrice).noneMatch(f -> {
+                        try {
+                            return isFieldNull(ended, f, Float.class) ||
+                                    getFieldValue(ended, f, Float.class) == 0;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }));
+                } else {
+                    throw new RuntimeException("Cannot test reservation for price. Field not found!");
+                }
             }
         }
     }

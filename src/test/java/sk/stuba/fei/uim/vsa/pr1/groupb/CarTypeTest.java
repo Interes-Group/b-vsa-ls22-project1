@@ -126,6 +126,8 @@ class CarTypeTest {
             carType = getFieldValue(car, "type");
         } else if (hasField(car, "carType")) {
             carType = getFieldValue(car, "carType");
+        } else if(hasField(car, "carTypeId")) {
+            carType = getFieldValue(car, "carTypeId");
         }
         if (carType != null) {
             Object found = carParkService.getCarType(getEntityId(carType));
@@ -158,6 +160,8 @@ class CarTypeTest {
             carType = getFieldValue(spot, "carType");
         } else if(hasField(spot, "carTypeSpot")) {
             carType = getFieldValue(spot, "carTypeSpot");
+        } else if(hasField(spot, "carTypeId")) {
+            carType = getFieldValue(spot, "carTypeId");
         }
         if (carType != null) {
             Object found = carParkService.getCarType(getEntityId(carType));
