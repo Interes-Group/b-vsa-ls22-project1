@@ -156,6 +156,8 @@ class CarTypeTest {
             carType = getFieldValue(spot, "type");
         } else if (hasField(spot, "carType")) {
             carType = getFieldValue(spot, "carType");
+        } else if(hasField(spot, "carTypeSpot")) {
+            carType = getFieldValue(spot, "carTypeSpot");
         }
         if (carType != null) {
             Object found = carParkService.getCarType(getEntityId(carType));

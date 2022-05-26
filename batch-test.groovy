@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 Boolean ALL = false
 String CWD = new File("..").absolutePath
 String TEST_PROJECT = new File(CWD + File.separator + "b-vsa-ls22-project1").absolutePath
-String STUDENT_GROUP = "c"
+String STUDENT_GROUP = "a"
 String FEEDBACK_DIR = "feedback"
 String SOURCE_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1'])
 String TARGET_TEST_DIR = File.separator + String.join(File.separator, ['src', 'test', 'java', 'sk', 'stuba', 'fei', 'uim', 'vsa', 'pr1' + STUDENT_GROUP])
