@@ -170,7 +170,7 @@ class CarParkTest {
     }
 
     @Test
-    void PARK06_deleteCarParkTest()  throws Exception {
+    void PARK06_deleteCarParkTest() throws Exception {
         Object carPark = carParkService.createCarPark("DELETE-CAR-PARK-1", "test11", 10);
         assertNotNull(carPark);
         Class c = carPark.getClass();

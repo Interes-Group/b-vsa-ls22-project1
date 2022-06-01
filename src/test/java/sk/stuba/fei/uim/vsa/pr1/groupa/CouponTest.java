@@ -182,7 +182,20 @@ class CouponTest {
                     }
                 }));
             } else {
-                throw new RuntimeException("Cannot test reservation for price. Field not found!");
+                String[] floatPrice = findFieldByType(ended, Float.class);
+                if (floatPrice.length > 0) {
+                    assertTrue(Arrays.stream(floatPrice).noneMatch(f -> {
+                        try {
+                            return isFieldNull(ended, f, Float.class) ||
+                                    getFieldValue(ended, f, Float.class) == 0;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }));
+                } else {
+                    throw new RuntimeException("Cannot test reservation for price. Field not found!");
+                }
             }
         }
     }
